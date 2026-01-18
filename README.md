@@ -288,6 +288,43 @@ flowguard/
 
 **Detection:** This represents a skipped step vulnerability—a logic flaw that allows order placement without payment processing.
 
+**Normal User Flow:**
+```
+GET /checkout/cart (200 OK - items added)
+  │
+  ├─ POST /checkout/address (200 OK - address saved)
+  │
+  ├─ POST /checkout/payment (200 OK - payment confirmed)
+  │
+  └─ POST /checkout/order (200 OK - order placed)
+     └─ Redirect to /orders/123 (success)
+```
+
+**Skipped Step Attack Flow (Detected by FlowGuard):**
+```
+GET /checkout/cart (200 OK - items added)
+  │
+  ├─ POST /checkout/address (200 OK - address saved)
+  │
+  └─ POST /checkout/order (200 OK - order placed WITHOUT payment)
+     └─ Redirect to /orders/124 (fraudulent order)
+     
+Detection: Missing payment confirmation step
+Risk: Order created without processing payment
+Rule Triggered: SKIPPED_STEPS
+Session State: Invalid transition detected
+```
+
+**FlowGuard Analysis Output:**
+```
+[FLOW] Analyzing request sequence...
+[FLOW] Expected: cart → address → payment → order
+[FLOW] Detected: cart → address → order
+[ALERT] Skipped step detected: PAYMENT_CONFIRMATION
+[ALERT] Risk: High - Order placed without payment
+[REPORT] Vulnerability: Broken Order Flow
+```
+
 ### Execution Mode
 
 FlowGuard operates in **Simulation Mode**, generating realistic application flows and traffic synthetically. This approach:
