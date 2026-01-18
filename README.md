@@ -1,87 +1,112 @@
 # FlowGuard
 
-> **Advanced Security Analysis for Web Application Logic and Flow**
-
-A CLI-based security analysis tool designed to identify and analyze complex vulnerabilities in web applications through simulation-driven flow logic testing. FlowGuard examines session behavior, access control weaknesses, and state transitions that traditional endpoint-only testing misses.
+A CLI-based security analysis tool for identifying logic flaws and access control weaknesses in web application workflows.
 
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Status](https://img.shields.io/badge/status-stable-brightgreen)](https://github.com/)
+[![Status](https://img.shields.io/badge/status-stable-brightgreen)]()
 
 ---
 
-## 🎯 Overview
+## Table of Contents
 
-Modern web vulnerabilities frequently stem from **logic and flow issues** rather than input validation defects. FlowGuard addresses this gap by providing a structured, simulation-driven approach to discovering:
-
-- **Skipped Steps**: Accessing protected workflows without completing prerequisite steps
-- **Session Vulnerabilities**: Expired session reuse, session fixation, and validation bypasses
-- **Access Control Flaws**: Role-based authorization inconsistencies across alternate paths
-- **Behavioral Anomalies**: Unexpected differences in application logic between versions
-
-### Why FlowGuard?
-
-Traditional security tools focus on individual endpoints. FlowGuard observes **multi-step application behavior**, state transitions, and sequence dependencies to uncover logic-based vulnerabilities that scanners miss.
+1. [Problem Statement](#problem-statement)
+2. [What is FlowGuard](#what-is-flowguard)
+3. [Key Features](#key-features)
+4. [Quick Start](#quick-start)
+5. [CLI Commands](#cli-commands)
+6. [Architecture](#architecture)
+7. [How It Works](#how-it-works)
+8. [Use Cases](#use-cases)
+9. [Limitations](#limitations)
+10. [Future Roadmap](#future-roadmap)
+11. [Contributing](#contributing)
+12. [License](#license)
+13. [Author](#author)
 
 ---
 
-## ✨ Key Features
+## Problem Statement
 
-### 🔹 Target Management
-- Set, view, and ping target applications
-- Centralized context for all security analyses
-- Quick target validation and reachability checks
+Traditional web application security testing focuses on individual endpoints—testing each URL for input validation, SQL injection, XSS, and other common vulnerabilities. However, many real-world vulnerabilities emerge from **application logic and state management**, not from weak input handling.
 
-### 🌐 Proxy Control (Simulated)
-- Start, stop, and monitor proxy engine lifecycle
-- Designed to mirror real HTTP interception workflows
-- Foundation for future live proxy integration
+**Common logic-based vulnerabilities include:**
 
-### 📥 Traffic Capture (Simulated)
+- **Skipped Steps**: Accessing protected workflows without completing prerequisite steps (e.g., checkout without payment)
+- **Session Reuse**: Using expired or invalidated sessions to maintain unauthorized access
+- **Privilege Escalation**: Accessing higher-privilege features by manipulating request sequences
+- **State Confusion**: Exploiting transitions between application states to bypass authorization
+- **Authorization Inconsistencies**: Different access rules applied across alternate paths to the same resource
+
+Traditional security scanners miss these issues because they test endpoints in isolation. FlowGuard addresses this gap by analyzing **multi-step application behavior and state transitions**.
+
+---
+
+## What is FlowGuard
+
+FlowGuard is a simulation-driven security analysis tool that identifies logic flaws by examining how web applications handle sequences of requests, session management, and state transitions. Instead of testing individual endpoints, FlowGuard simulates realistic user workflows and detects abnormal behavior patterns.
+
+**Key insight:** Security issues frequently stem from broken logic, not broken syntax. FlowGuard focuses on application flows and state transitions to uncover vulnerabilities that endpoint-only testing overlooks.
+
+---
+
+## Key Features
+
+### Target Management
+- Set and manage target application URLs
+- Validate target reachability
+- Quick configuration and context switching
+
+### Proxy Control
+- Start, stop, and monitor proxy engine (simulation mode)
+- Foundation for traffic interception workflows
+- Designed for future live proxy integration
+
+### Traffic Capture
 - Begin and stop traffic capture sessions
-- List and inspect captured request data
-- Clear captured traffic for fresh analyses
-- Input foundation for flow analysis engine
+- Inspect and list captured request data
+- Clear captured data for fresh analyses
+- Input foundation for flow analysis
 
-### 🔀 Flow Analysis
-- Analyze request sequences and state transitions
-- Detect skipped steps and abnormal navigation patterns
-- View discovered application flows in structured format
-- Export flow data for external inspection and reporting
+### Flow Analysis
+- Detect skipped steps in application workflows
+- Identify abnormal navigation and state transitions
+- View discovered flows in structured format
+- Export flow data for reporting and external analysis
 
-### 🧠 Logic Rule Engine
-- Built-in rules: admin bypass, session fixation, privilege escalation
-- Dynamic rule enable/disable functionality
+### Logic Rule Engine
+- Built-in detection rules: admin bypass, session fixation, privilege escalation
+- Enable and disable rules dynamically
 - Run comprehensive logic tests against captured flows
-- Extensible architecture for custom rule development
+- Extensible architecture for custom rules
 
-### 🔐 Session Analysis
-- Analyze session usage patterns and lifecycle
-- Detect session reuse vulnerabilities
-- Test session invalidation behavior
-- Validate session expiration and token handling
+### Session Analysis
+- Analyze session lifecycle and usage patterns
+- Test for session reuse vulnerabilities
+- Validate session invalidation behavior
+- Detect token handling issues
 
-### 🔍 Diff Analysis
+### Diff Analysis
 - Compare application behavior between versions
-- Identify changes in flow logic and authorization rules
-- Generate detailed summaries of behavioral differences
-- Track security regression testing
+- Identify changes in logic and authorization rules
+- Generate summaries of behavioral differences
+- Track security regressions
 
-### 📊 Reporting
+### Reporting
 - Generate consolidated security analysis reports
-- View results directly in CLI interface
-- Export reports in supported formats
-- Structured output suitable for compliance and audit
+- Export reports in multiple formats
+- View results directly in CLI
+- Suitable for compliance and audit documentation
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/flowguard.git
+git clone https://github.com/Jaganbhasker1122/flowguard.git
 cd flowguard
 
 # Install dependencies
@@ -91,30 +116,31 @@ pip install -r requirements.txt
 python main.py --version
 ```
 
-### Basic Usage
+### Basic Workflow
 
 ```bash
-# Start FlowGuard
+# Start FlowGuard interactive CLI
 python main.py
 
 # Set your target application
 fg target-set --url https://demo-app.local
 
-# Start the proxy and begin analysis
+# Begin security analysis
 fg proxy-start
 fg capture-start
 
-# Analyze flows
+# Analyze application flows
 fg flow-analyze
-fg report-generate
+fg logic-test
 
-# View results
+# Generate report
+fg report-generate
 fg report-show
 ```
 
 ---
 
-## 📖 Command Reference
+## CLI Commands
 
 All FlowGuard commands are prefixed with `fg`.
 
@@ -122,8 +148,8 @@ All FlowGuard commands are prefixed with `fg`.
 
 | Command | Description |
 |---------|-------------|
-| `fg --help` / `fg help` | Display all available commands and usage |
-| `fg --version` / `fg version` | Show FlowGuard version information |
+| `fg help` | Display all available commands and options |
+| `fg version` | Show FlowGuard version information |
 | `fg doctor` | Run system and configuration health check |
 | `fg clear` | Clear the terminal screen |
 
@@ -132,27 +158,27 @@ All FlowGuard commands are prefixed with `fg`.
 | Command | Description |
 |---------|-------------|
 | `fg target-set --url <URL>` | Set the target application URL |
-| `fg target-show` | Display the currently configured target |
-| `fg target-clear` | Clear the current target configuration |
-| `fg target-ping` | Check target reachability (simulated) |
+| `fg target-show` | Display current target configuration |
+| `fg target-clear` | Clear the target configuration |
+| `fg target-ping` | Validate target reachability |
 
-### Proxy Control (Simulated)
+### Proxy Control (Simulation Mode)
 
 | Command | Description |
 |---------|-------------|
-| `fg proxy-start` | Start the proxy engine (simulation mode) |
+| `fg proxy-start` | Start the proxy engine |
 | `fg proxy-stop` | Stop the running proxy |
-| `fg proxy-status` | Show current proxy status |
-| `fg proxy-config` | Display proxy configuration details |
+| `fg proxy-status` | Display current proxy status |
+| `fg proxy-config` | Show proxy configuration details |
 
-### Traffic Capture (Simulated)
+### Traffic Capture (Simulation Mode)
 
 | Command | Description |
 |---------|-------------|
-| `fg capture-start` | Begin traffic capture |
+| `fg capture-start` | Begin traffic capture session |
 | `fg capture-stop` | Stop traffic capture |
 | `fg capture-list` | List captured requests |
-| `fg capture-clear` | Clear all captured traffic data |
+| `fg capture-clear` | Clear all captured data |
 
 ### Flow Analysis
 
@@ -160,23 +186,23 @@ All FlowGuard commands are prefixed with `fg`.
 |---------|-------------|
 | `fg flow-analyze` | Analyze captured flows for logic issues |
 | `fg flow-show` | Display discovered application flows |
-| `fg flow-export` | Export flow data (JSON/CSV format) |
+| `fg flow-export` | Export flow data (JSON/CSV) |
 | `fg flow-reset` | Clear all flow analysis data |
 
-### Logic Engine
+### Logic Rule Engine
 
 | Command | Description |
 |---------|-------------|
-| `fg logic-test` | Run logic tests against analyzed flows |
-| `fg logic-rules` | Display available logic rules |
-| `fg logic-enable <rule>` | Enable a specific logic rule |
-| `fg logic-disable <rule>` | Disable a specific logic rule |
+| `fg logic-test` | Run logic tests against flows |
+| `fg logic-rules` | Display available detection rules |
+| `fg logic-enable <rule>` | Enable a specific rule |
+| `fg logic-disable <rule>` | Disable a specific rule |
 
 ### Session Analysis
 
 | Command | Description |
 |---------|-------------|
-| `fg session-analyze` | Analyze session usage patterns |
+| `fg session-analyze` | Analyze session patterns and lifecycle |
 | `fg session-reuse-test` | Test for session reuse vulnerabilities |
 | `fg session-invalidate-test` | Test session invalidation behavior |
 
@@ -184,34 +210,34 @@ All FlowGuard commands are prefixed with `fg`.
 
 | Command | Description |
 |---------|-------------|
-| `fg diff-run --baseline <v1> --compare <v2>` | Compare application behavior between versions |
-| `fg diff-summary` | Display summary of detected differences |
+| `fg diff-run --baseline <v1> --compare <v2>` | Compare behavior between versions |
+| `fg diff-summary` | Display summary of differences |
 
 ### Reporting
 
 | Command | Description |
 |---------|-------------|
-| `fg report-generate` | Generate a comprehensive security analysis report |
+| `fg report-generate` | Generate security analysis report |
 | `fg report-show` | Display the generated report |
 | `fg report-export --format <format>` | Export report in specified format |
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ### Project Structure
 
 ```
 flowguard/
 ├── main.py                 # CLI entry point and command router
-├── core/                   # Core application state and engine
-│   ├── app_state.py       # Shared application state management
+├── core/                   # Core application state management
+│   ├── app_state.py       # Shared state across modules
 │   └── command_router.py  # Command parsing and routing
-├── modules/               # Feature modules (fully isolated)
+├── modules/               # Feature modules (isolated and independent)
 │   ├── target.py          # Target management
 │   ├── proxy.py           # Proxy lifecycle control
 │   ├── capture.py         # Traffic capture engine
-│   ├── flow.py            # Flow analysis module
+│   ├── flow.py            # Flow analysis and detection
 │   ├── logic.py           # Logic rule engine
 │   ├── session.py         # Session analysis
 │   ├── diff.py            # Version comparison
@@ -221,160 +247,162 @@ flowguard/
 │   ├── validation.py      # Input validation
 │   └── formatters.py      # Output formatting
 ├── requirements.txt       # Python dependencies
-└── README.md             # This file
+└── README.md             # Documentation
 ```
 
-### Design Philosophy
+### Design Principles
 
-- **Flow-First Security**: Analyzes multi-step behaviors, not just individual endpoints
-- **State-Aware Analysis**: Tracks sessions, transitions, and sequence dependencies
-- **CLI-Driven**: Transparent, automatable, and scriptable interface
-- **Simulation-Based**: Deterministic testing without environment dependencies
-- **Modular Design**: Isolated modules with clear interfaces for extensibility
+**Flow-First Security:** Analyzes multi-step behaviors and state transitions rather than individual endpoints.
 
----
+**State-Aware Analysis:** Tracks session state, authorization context, and sequence dependencies across requests.
 
-## 🧪 Testing & Validation
+**CLI-Driven:** Transparent, scriptable, and easily automatable interface for integration into security workflows.
 
-All FlowGuard commands have been manually tested end-to-end using the simulation engine.
+**Simulation-Based:** Deterministic testing without environment dependencies, enabling consistent and repeatable analysis.
 
-**Test Coverage Includes:**
-- Target setup and configuration management
-- Proxy lifecycle (start, stop, status)
-- Traffic capture (start, stop, list, clear)
-- Flow analysis and export functionality
-- Logic rule testing and management
-- Session analysis and vulnerability detection
-- Diff analysis and version comparison
-- Report generation and export
-
-**Validation Results:**
-✅ No command crashes or state inconsistencies  
-✅ Deterministic and repeatable results  
-✅ Proper error handling and user feedback  
+**Modular Design:** Isolated modules with clear interfaces, designed for extensibility and maintenance.
 
 ---
 
-## 🛠️ Current Execution Mode
+## How It Works
 
-### Simulation Mode (Stable)
+### Analysis Pipeline
 
-FlowGuard operates in **Simulation Mode**, generating realistic web traffic, sessions, and application flows synthetically. This approach enables:
+1. **Target Configuration**: Set the target application URL and configuration
+2. **Proxy Start**: Initialize the analysis engine
+3. **Traffic Capture**: Capture or simulate application traffic
+4. **Flow Analysis**: Detect request sequences, state transitions, and abnormal patterns
+5. **Logic Testing**: Run detection rules to identify vulnerabilities
+6. **Session Analysis**: Analyze session management and lifecycle
+7. **Report Generation**: Compile findings into a security report
 
-- Full end-to-end testing of logic without environment dependencies
-- Deterministic and repeatable security analyses
-- Easy demonstrations, testing, and documentation
-- Clean validation of security logic
+### Example: Detecting Skipped Steps
 
-**Why Simulation?**
-- Avoids complexity of OS-level proxy interception
-- Enables cross-platform compatibility
-- Supports deterministic security testing
-- Ideal for logic validation and educational use
+**Scenario:** A web application requires users to complete a multi-step checkout process:
+1. Select items (cart)
+2. Enter shipping address
+3. Confirm payment
+4. Place order
 
----
+**FlowGuard detects:** A user accessing step 4 (place order) without completing step 3 (confirm payment).
 
-## 🔮 Roadmap
+**Detection:** This represents a skipped step vulnerability—a logic flaw that allows order placement without payment processing.
 
-### Planned Enhancements
+### Execution Mode
 
-- **Live Proxy Integration**: Real HTTP/HTTPS traffic interception (WSL/Linux)
-- **Multiple Data Sources**: Support for proxy logs, PCAP files, HAR exports
-- **Graph Visualization**: Interactive flow visualization and dependency graphs
-- **Custom Rule Framework**: Configuration file-based rule customization
-- **CI/CD Integration**: Automated scenario testing and regression detection
-- **Enhanced Reporting**: PDF export, HTML dashboards, compliance templates
+FlowGuard operates in **Simulation Mode**, generating realistic application flows and traffic synthetically. This approach:
 
----
+- Enables full end-to-end testing without external dependencies
+- Produces deterministic and repeatable results
+- Simplifies cross-platform compatibility
+- Avoids OS-level proxy complexity
 
-## 📋 Current Limitations
-
-The following limitations are intentional design choices:
-
-- Live HTTP/HTTPS interception not enabled (use Simulation Mode)
-- Traffic data is synthetically generated, not captured from real browsers
-- CLI-only interface (no GUI)
-- Rules are predefined (custom rules planned)
-
-These constraints keep the focus on logic correctness and cross-platform compatibility rather than environment-specific complexities.
+Simulation mode is ideal for learning, validation, and integration testing.
 
 ---
 
-## 💡 Use Cases
+## Use Cases
 
-### Security Testing & Validation
-- Identify logic flaws in multi-step workflows
-- Validate authorization across alternate paths
-- Test session handling and expiration
+### Security Testing and Validation
+
+Identify logic flaws in multi-step workflows, validate authorization rules across alternate paths, and test session management behavior without requiring access to a live application.
 
 ### Regression Testing
-- Compare security behavior across application versions
-- Detect unintended changes in access control logic
-- Track security improvements over time
 
-### Educational & Demonstrations
-- Teach security concepts around logic flaws
-- Demonstrate flow-based vulnerability discovery
-- Validate security logic before implementation
+Compare security behavior across application versions to detect unintended changes in access control logic or behavioral differences that might introduce new vulnerabilities.
 
-### Compliance & Audit
-- Generate detailed security analysis reports
-- Document application flow behavior
-- Provide evidence of security testing
+### Educational and Demonstrations
+
+Teach logic-based vulnerability concepts, demonstrate how flow analysis detects complex vulnerabilities, and validate security logic before implementation.
+
+### Compliance and Audit
+
+Generate detailed security analysis reports, document application flow behavior, and provide evidence of comprehensive security testing for compliance requirements.
 
 ---
 
-## 🤝 Contributing
+## Limitations
 
-Contributions are welcome! Areas for contribution:
+The following are intentional design choices reflecting the project scope:
 
-- New logic rules and detection patterns
-- Enhanced reporting formats
-- Documentation and examples
+**Execution Mode:**
+- Operates in simulation mode; live HTTP/HTTPS interception not enabled
+- Traffic data is synthetically generated, not captured from real browsers
+- Designed for logic validation rather than production proxy functionality
+
+**Interface and Configuration:**
+- CLI-only interface (no GUI)
+- Rules are predefined; custom rule configuration files planned for future release
+- Report formats currently text and basic structured output
+
+**Analysis Scope:**
+- Focuses on application logic and flow; does not perform input validation testing
+- Does not include vulnerability payloads (e.g., XSS, SQL injection)
+- Targets web application workflows, not infrastructure or network security
+
+These constraints keep the focus on logic correctness and cross-platform compatibility while maintaining a clear project scope.
+
+---
+
+## Future Roadmap
+
+### Short-term Enhancements
+- Live HTTP/HTTPS traffic interception (Linux/WSL support)
+- Support for multiple data sources (proxy logs, PCAP files, HAR exports)
+- Custom rule framework with configuration file support
+
+### Medium-term Improvements
+- Interactive flow visualization and dependency graphs
+- CI/CD pipeline integration for automated regression testing
+- Enhanced reporting (PDF export, HTML dashboards, compliance templates)
+
+### Long-term Vision
+- Machine learning-based anomaly detection
+- Behavioral baseline learning from normal traffic
+- Integration with other security tools and frameworks
+
+---
+
+## Contributing
+
+Contributions are welcome. Areas for contribution include:
+
+- New detection rules and logic patterns
+- Enhanced reporting formats and export options
+- Documentation, examples, and tutorials
 - Bug reports and feature requests
+- Platform-specific improvements
 
-Please submit issues and pull requests on GitHub.
+**To contribute:**
 
----
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/description`)
+3. Commit your changes with clear messages
+4. Push to the branch and open a pull request
 
-## 📜 License
-
-FlowGuard is released under the [MIT License](LICENSE).
-
----
-
-## 🎓 Key Takeaway
-
-**Security issues frequently emerge from broken logic, not broken syntax.** By focusing on application flows, session management, and state transitions, FlowGuard provides a foundation for next-generation application security analysis—addressing vulnerabilities that traditional endpoint-only testing overlooks.
+Please include test cases and documentation with your contributions.
 
 ---
 
-## 📧 Support
+## License
 
-For issues, questions, or feature requests:
-- **Issues**: [GitHub Issues](https://github.com/yourusername/flowguard/issues)
-- **Documentation**: See `docs/` directory for detailed guides
-- **Examples**: Check `examples/` for workflow demonstrations
+FlowGuard is released under the MIT License. See the LICENSE file for details.
 
 ---
 
-**FlowGuard**: *Where logic meets security.*
-
----
-
-## 👤 Author
+## Author
 
 **Gurram Jagan Bhasker**  
-B.Tech (3rd Year) – Cyber Security | India
+B.Tech Cyber Security (3rd Year) | India
 
-Cybersecurity enthusiast with a strong interest in application security, logic flaw analysis, and defensive tooling. Focused on building practical, research-oriented security projects with expertise in malware analysis, threat hunting, and secure application design.
+Cybersecurity professional with expertise in application security, logic flaw analysis, and defensive security tooling. Focused on building practical, research-oriented security projects.
 
-### 📫 Contact & Profiles
+### Contact and Profiles
 
-- **GitHub**: [github.com/Jaganbhasker1122](https://github.com/Jaganbhasker1122)
-- **LinkedIn**: [linkedin.com/in/gurram-jagan-bhasker-a0906b29a](https://www.linkedin.com/in/gurram-jagan-bhasker-a0906b29a/)
-- **Email**: [jaganbhaskergurram@gmail.com](mailto:jaganbhaskergurram@gmail.com)
+- GitHub: [github.com/Jaganbhasker1122](https://github.com/Jaganbhasker1122)
+- LinkedIn: [linkedin.com/in/gurram-jagan-bhasker-a0906b29a](https://www.linkedin.com/in/gurram-jagan-bhasker-a0906b29a/)
+- Email: jaganbhaskergurram@gmail.com
 
 ---
 
-*Built with ❤️ for the security community*
+*FlowGuard: Where logic meets security.*
